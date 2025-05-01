@@ -6,19 +6,14 @@ import time
 import requests
 from dotenv import load_dotenv
 
-logging.basicConfig(level=logging.INFO, filename="logs.log",filemode="a")
-urls = ["http://localhost:8000/secret/"]
-data = {
-    "secret": "secret",
-    "passphrase": "1234",
-    "ttl_seconds": 60
-}
-#нужна информацию что в себя принемает endpoint на который отправляется post запрос
+logging.basicConfig(level=logging.INFO, filename="logs.log", filemode="a")
+urls = ["formit.fake", "datavalidator.fake", "leadsync.fake", "bitdashboard.fake"]
+data = None  # нужна информацию что в себя принемает endpoint на который отправляется post запрос
 
 
 def get_message_tg(message):
     load_dotenv()
-    url_bot = f"https://api.telegram.org/bot{os.getenv("tocken_bot")}/sendMessage?chat_id={os.getenv("chat_id")}&text={message}"
+    url_bot = f"https://api.telegram.org/bot{os.getenv("token_bot")}/sendMessage?chat_id={os.getenv("chat_id")}&text={message}"
     response = requests.get(url_bot)
     print(response.json())
 
@@ -43,8 +38,9 @@ while True:
                 count_500 += 1
             else:
                 count_500 = 0
-            if str(status)[0] == "5" or count_401 >= 3 or count_500 >= 3: #не понял критерии критической ошибки, поэтому взял все ответы с статус кодом 5хх
-                text_error = "Critical_error: " + text                      #и если более 3 раз подряд встречается 401 или 500 ошибка
+            if str(status)[
+                0] == "5" or count_401 >= 3 or count_500 >= 3:  # не понял критерии критической ошибки, поэтому взял все ответы с статус кодом 5хх
+                text_error = "Critical_error: " + text  # и если более 3 раз подряд встречается 401 или 500 ошибка
                 logging.critical(text)
                 get_message_tg(text_error)
     time.sleep(300)
