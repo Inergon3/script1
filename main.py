@@ -43,8 +43,8 @@ while True:
                 count_500 += 1
             else:
                 count_500 = 0
-            if str(status)[0] == "5" or count_401 >= 3 or count_500 >= 3:
-                text_error = "Critical_error: " + text
+            if str(status)[0] == "5" or count_401 >= 3 or count_500 >= 3: #не понял критерии критической ошибки, поэтому взял все ответы с статус кодом 5хх
+                text_error = "Critical_error: " + text                      #и если более 3 раз подряд встречается 401 или 500 ошибка
                 logging.critical(text)
                 get_message_tg(text_error)
     time.sleep(300)
