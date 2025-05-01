@@ -15,7 +15,6 @@ def get_message_tg(message):
     load_dotenv()
     url_bot = f"https://api.telegram.org/bot{os.getenv("token_bot")}/sendMessage?chat_id={os.getenv("chat_id")}&text={message}"
     response = requests.get(url_bot)
-    print(response.json())
 
 
 while True:
@@ -23,7 +22,13 @@ while True:
         count_401 = 0
         count_500 = 0
         for i in range(1, 6):
-            response = requests.post(url, json=data)
+            try:
+                response = requests.post(url, json=data)
+            except:
+                message = f"{url} not found connect"
+                logging.critical(message)
+                get_message_tg(message)
+                continue
             status = response.status_code
             text = f"\n time= {datetime.datetime.now()},\n URL= {response.url},\n status_code= {response.status_code},\n time_response= {response.elapsed.total_seconds()}\n"
             if str(status)[0] == "2":
